@@ -1,0 +1,188 @@
+source $VIMRUNTIME/vimrc_example.vim
+let autosave=61
+map <C-s> :w<CR>
+imap <C-s> <Esc>:w<CR>a
+"让配置变更立即生效
+"autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+"--------------------------------------------------
+"模仿Windows的快捷键: Ctrl+a Ctrl+c Ctrl+v
+"source $VIMRUNTIME/mswin.vim
+"behave mswin
+"--------------------------------------------------
+
+"--------------------------------------------------
+colorscheme desert      "主题
+filetype plugin indent on
+"--------------------------------------------------
+
+"--------------------------------------------------
+"编码
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8  
+set fileencoding=utf-8  
+set encoding=utf-8  
+"--------------------------------------------------
+
+"--------------------------------------------------
+"解决菜单乱码
+set langmenu=zh_CN  
+let $LANG = 'zh_CN.UTF-8'  
+source $VIMRUNTIME/delmenu.vim  
+source $VIMRUNTIME/menu.vim  
+"--------------------------------------------------
+  
+"--------------------------------------------------------------------------------
+"定制状态栏样式
+"set laststatus=1    "显示状态栏 1: 不显示 2: 显示
+"set statusline=\ %<%F[%1*%M%*%n%R%H]%=\ %y\ %0(%{&fileformat}\ %{&encoding}\ %c:%l/%L%)\ 
+"--------------------------------------------------------------------------------
+
+"--------------------------------------------------
+"不生成临时文件
+set nobackup        "覆盖文件时不备份
+set noswapfile      "不生成交换文件
+set noundofile      "不生成历史撤销文件
+"--------------------------------------------------
+
+"------------------------------------------------------------
+"打开vim时窗口最大化
+if has('win32')
+    au GUIEnter * simalt ~x
+else
+    au GUIEnter * call MaximizeWindow()
+endif
+function! MaximizeWindow()
+    silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
+endfunction
+"------------------------------------------------------------
+
+"设置快捷键F2显示和隐藏菜单栏、工具栏
+"------------------------------------------------------------
+map <silent> <F2> :if &guioptions =~# 'T' <Bar>
+        \set guioptions-=T <Bar>
+        \set guioptions-=m <bar>
+    \else <Bar>
+        \set guioptions+=T <Bar>
+        \set guioptions+=m <Bar>
+    \endif<CR>
+"------------------------------------------------------------
+
+"------------------------------------------------------------
+"定义快捷键
+"let mapleader=";"   "定义快捷键的前缀
+"vnoremap <Leader>y "+y
+"nmap <Leader>p "+p
+"------------------------------------------------------------
+
+"----------------------------------------------------------------------
+set nocompatible    "关闭vi兼容模式
+set noerrorbells    "关闭错误提示音
+"set showmatch       "高亮显示匹配的括号
+set shortmess=atI   "启动时不显示援助信息
+set incsearch       "边输入边匹配搜索结果
+"set textwidth=80    "设置每行的字符数
+"set fo+=m
+set hlsearch        "高亮显示搜索结果
+set number          "显示行号
+set relativenumber  "显示相对行号
+set ruler           "打开状态栏标尺
+set showtabline=2   "显示标签栏  0: 不显示  1: 多于一个便签时才显示  2: 总是显示
+set autochdir       "自动切换当前目录为当前文件所在目录
+set shiftwidth=4    "设置<<和>>移动的长度
+set tabstop=4       "tab的长度
+set softtabstop=4   "使得按退格键时可以一次删除4个空格
+set expandtab       "把tab转换成空格
+set autoindent      "自动缩进
+set smartindent     "新行时使用智能自动缩进
+set guioptions-=m   "隐藏菜单栏
+set guioptions-=T   "隐藏工具栏
+set guioptions-=r   "关闭右侧滚动条
+set shellslash      "在文件名中使用向前斜线
+set autoread        "文件被改动时自动载入
+set imcmdline       "不知道干嘛的
+"set nowrap
+set foldmethod=indent
+set nofoldenable
+set gfn=Consolas:h12:cANSI  "设置英文字体 
+set gfw=NSimsun:h12         "设置中文字体
+set grepprg=grep\ -nH\ $*   "不知道干嘛的
+"set cursorline      "突显当前行
+"set history=500     "设置历史记录数目
+"----------------------------------------------------------------------
+
+"这段不知道是用来干嘛的
+"------------------------------------------------------------
+"set diffexpr=MyDiff()
+"function MyDiff()
+"  let opt = '-a --binary '
+"  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+"  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+"  let arg1 = v:fname_in
+"  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+"  let arg2 = v:fname_new
+"  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+"  let arg3 = v:fname_out
+"  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+"  let eq = ''
+"  if $VIMRUNTIME =~ ' '
+"    if &sh =~ '\<cmd'
+"      let cmd = '""' . $VIMRUNTIME . '\diff"'
+"      let eq = '"'
+"    else
+"      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+"    endif
+"  else
+"    let cmd = $VIMRUNTIME . '\diff'
+"  endif
+"  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+"endfunction
+"------------------------------------------------------------
+
+"------------------------------------------------------------
+"按F5键编译运行代码
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+    exec "w"
+    if &filetype == 'c'
+        exec "!gcc -std=c11 % -o %< && %<"
+    elseif &filetype == 'cpp'
+        exec "!g++ -Wall -std=c++11 % -o %< && %<"
+    elseif &filetype == 'java' 
+        exec "!javac % && java %<"
+    elseif &filetype == 'sh'
+        :!%
+    elseif &filetype == 'python'
+    	exec "!python %"
+    elseif &filetype == 'tex'
+        exec "silent !xelatex %"
+    endif
+endfunc
+map <F8> :call Rungdb()<CR>  
+func! Rungdb()  
+    exec "w"  
+    exec "!g++ % -g -o %<"  
+    exec "!gdb %<"  
+endfunc  
+"------------------------------------------------------------
+
+"------------------------------------------------------------
+"切换标签
+function! TabPos_ActivateBuffer(num)
+    let s:count = a:num
+    exe "tabfirst"
+    exe "tabnext" s:count
+endfunction
+ 
+function! TabPos_Initialize()
+for i in range(1, 9)
+        exe "map <M-" . i . "> :call TabPos_ActivateBuffer(" . i . ")<CR>"
+    endfor
+    exe "map <M-0> :call TabPos_ActivateBuffer(10)<CR>"
+endfunction
+ 
+autocmd VimEnter * call TabPos_Initialize()
+
+nmap <C-t> :browse tabnew<CR> 
+nmap <C-Tab> :tabn<CR> 
+nmap <C-S-Tab> :tabp<CR> 
