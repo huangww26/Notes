@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+'''
+Measure the running time of python program roughly
+'''
 
 from datetime import datetime
 
