@@ -94,7 +94,7 @@ set tabstop=4       "tab的长度
 set softtabstop=4   "使得按退格键时可以一次删除4个空格
 set expandtab       "把tab转换成空格
 set autoindent      "自动缩进
-set smartindent     "新行时使用智能自动缩进
+"set smartindent     "新行时使用智能自动缩进
 set guioptions-=m   "隐藏菜单栏
 set guioptions-=T   "隐藏工具栏
 set guioptions-=r   "关闭右侧滚动条
